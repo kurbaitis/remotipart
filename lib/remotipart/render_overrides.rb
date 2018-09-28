@@ -4,16 +4,8 @@ module Remotipart
   module RenderOverrides
     include ERB::Util
 
-    def self.included(base)
-      base.class_eval do
-        # Use neither alias_method_chain nor prepend for compatibility
-        alias render_without_remotipart render
-        alias render render_with_remotipart
-      end
-    end
-
-    def render_with_remotipart(*args, &block)
-      render_return_value = render_without_remotipart(*args, &block)
+    def render(*args, &block)
+      render_return_value = super(*args, &block)
       if remotipart_submitted?
         textarea_body = response.content_type == 'text/html' ? html_escape(response.body) : response.body
         response.body = %{<script type=\"text/javascript\">try{window.parent.document;}catch(err){document.domain=document.domain;}</script> <textarea data-type=\"#{response.content_type}\" data-status=\"#{response.response_code}\" data-statusText=\"#{response.message}\">#{textarea_body}</textarea>}

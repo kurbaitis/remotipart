@@ -32,7 +32,7 @@ module Remotipart
       initializer "remotipart.controller_helper" do
         ActiveSupport.on_load(:action_controller) do
           include RequestHelper
-          include RenderOverrides
+          prepend RenderOverrides
         end
       end
 
